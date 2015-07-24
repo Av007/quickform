@@ -1,5 +1,5 @@
 <?php
-defined('MAIN_PATH') || define('MAIN_PATH', realpath(__DIR__));
+defined('MAIN_PATH') || define('MAIN_PATH', realpath('../app' . __DIR__));
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Silex\Provider\SwiftmailerServiceProvider;
