@@ -1,0 +1,12 @@
+{
+  "name": "av007/quickform",
+  "description": "The faster way how to create simple form",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Vladimir Avdeev",
+      "email": "avdeevvladimir@gmail.com"
+    }
+  ]
+}
