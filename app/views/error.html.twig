@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Ошибка {{ code }}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="four columns centered text-center">
+            <h1>{{ code }}</h1>
+
+            <p>{{ message }}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="text-left">
+        {% if debug %}
+            <pre>{{ debug }}</pre>
+        {% endif %}
+    </div>
+{% endblock %}
