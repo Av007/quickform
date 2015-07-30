@@ -1,0 +1,52 @@
+{% extends 'layout.html.twig' %}
+
+{% block seo_description %}{{ seo.description }}{% endblock %}
+{% block seo_keywords %}{{ seo.keywords }}{% endblock %}
+{% block seo_title %}{{ seo.title }}{% endblock %}
+
+{% form_theme form _self %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <div class="small-9 columns">
+            {%- for error in errors -%}
+                <small class="error">{{ error.message }}</small>
+            {%- endfor -%}
+        </div>
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{% block content %}
+    <div class="row">
+        <h1>{{ title }}</h1>
+
+        <div class="small-10">
+            <div class="row">
+
+            {#<?php if ($this->formElementErrors($form->get('email'))): ?>
+            <div class="small-3 columns">
+                <?php echo $this->formLabel($form->get('email')->setLabelAttributes(array('class' => 'error'))); ?>
+            </div>
+            <div class="small-9 columns">
+                <?php echo $this->formElement($form->get('email')->setAttributes(array('class' => 'error'))); ?>
+                <small class="error"><?php echo $this->formElementErrors($form->get('email'));?></small>
+            </div>
+            <?php else: ?>
+            <div class="small-3 columns">
+                <?php echo $this->formLabel($form->get('email')); ?>
+            </div>
+            <div class="small-9 columns">
+                <?php echo $this->formElement($form->get('email')); ?>
+            </div>
+            <?php endif; ?>#}
+
+            <form action="#" method="post">
+                {{ form(form) }}
+
+                <input type="submit" name="submit" class="button right"/>
+            </form>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

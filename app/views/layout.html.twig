@@ -6,11 +6,13 @@
     <meta charset="utf-8">
     <!-- If you delete this meta tag World War Z will become a reality -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="{% block seo_description %}{% endblock %}">
+    <meta name="keywords" content="{% block seo_keywords %}{% endblock %}">
+    <title>{% block seo_title %}{% endblock %}</title>
 
     <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/normalize.min.css">
+    <link rel="stylesheet" href="css/foundation.min.css">
 
     <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="css/app.css">

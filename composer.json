@@ -11,7 +11,8 @@
   ],
   "require": {
     "silex/silex": "v1.3.0",
-    "symfony/validator": "2.0.7",
+    "symfony/validator": "^2.7",
+    "symfony/translation": "^2.7",
     "monolog/monolog": "1.15.0",
     "symfony/locale": "^2.7",
     "symfony/config": "^2.7",
@@ -19,6 +20,8 @@
     "twig/twig": "^1.18",
     "symfony/twig-bridge": "^2.7",
     "swiftmailer/swiftmailer": "^5.4",
-    "symfony/translation": "^2.7"
+    "symfony/form": "^2.7",
+    "symfony/security-csrf": "^2.7",
+    "symfony/yaml": "^2.7"
   }
 }
