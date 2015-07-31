@@ -11,11 +11,9 @@ $app->match('/', function(Request $request) use ($app) {
     $yml = new Parser();
     /** @var array|null $config */
     $config = $yml->parse(file_get_contents(MAIN_PATH . '/config.yml'));
-    /** @var Symfony\Component\Form\FormBuilder $formSymfonyBuilder */
-    $formSymfonyBuilder = $app['form.factory']->createBuilder('form', $config);
 
     // build form
-    $formBuilder = new FormBuilder($formSymfonyBuilder, $config);
+    $formBuilder = new FormBuilder($app['form.factory'], $config);
     $form = $formBuilder->getForm();
 
     $form->handleRequest($request);
@@ -30,7 +28,6 @@ $app->match('/', function(Request $request) use ($app) {
     }
 
     return $app['twig']->render('form.html.twig', array(
-        'seo'   => $config['form']['seo'],
         'title' => $config['form']['title'],
         'form'  => $form->createView(),
     ));

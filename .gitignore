@@ -10,3 +10,4 @@ web/node_modules
 
 web/css/*.min.*
 web/css/*.css.map
+web/css/*-csp.css

@@ -2,22 +2,38 @@
 
 namespace Quickform\Entity;
 
+use Symfony\Component\Form\FormFactory;
 use \Symfony\Component\Form\FormBuilder as FormSymfonyBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class FormBuilder
 {
-    /** @var FormSymfonyBuilder|null $form */
+    /** @var FormFactory|null $form */
     protected $form;
+    /** @var string $formName */
+    protected $formName;
 
     /**
      * Initialization
      *
-     * @param FormSymfonyBuilder $formSymfonyBuilder
+     * @param FormFactory $formFactory
      * @param array|null $structure
      */
-    public function __construct(FormSymfonyBuilder $formSymfonyBuilder, $structure)
+    public function __construct(FormFactory $formFactory, $structure)
     {
+        $formOptions = array();
+        if ('js' === $structure['form']['validation']) {
+            $formOptions = array('attr' => array(
+                'class'      => 'css-form',
+                'novalidate' => 'novalidate'
+            ));
+        }
+
+        $this->formName = $structure['form']['name'];
+
+        /** @var FormSymfonyBuilder $formBuilder */
+        $formBuilder = $formFactory->createNamedBuilder($this->formName, 'form', null, $formOptions);
+
         if ($structure && $structure['form']['show']) {
             foreach ($structure['form']['fields'] as $field) {
 
@@ -26,7 +42,7 @@ class FormBuilder
                     // validations
                     $options = array();
                     $constrains = array();
-                    if ($field['validation']) {
+                    if (isset($field['validation']) && $field['validation']) {
                         foreach ($field['validation'] as $key => $validation) {
 
                             if ('required' === $key) {
@@ -80,16 +96,17 @@ class FormBuilder
                         }
                     }
 
-                    $formSymfonyBuilder->add($field['name'], $field['type'], $options);
+                    $options = array_merge($options, array('attr' => array('ng-model' => $this->formName . '.' . $field['name'])));
+                    $formBuilder->add($field['name'], $field['type'], $options);
                 }
             }
 
-            $formSymfonyBuilder->add('submit', 'submit', array(
+            $formBuilder->add('submit', 'submit', array(
                 'attr' => array('class' => 'button right')
             ));
         }
 
-        $this->form = $formSymfonyBuilder;
+        $this->form = $formBuilder;
     }
 
     /**

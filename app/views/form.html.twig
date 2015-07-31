@@ -1,9 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-{% block seo_description %}{{ seo.description }}{% endblock %}
-{% block seo_keywords %}{{ seo.keywords }}{% endblock %}
-{% block seo_title %}{{ seo.title }}{% endblock %}
-
 {% form_theme form _self %}
 
 {%- block form_errors -%}
@@ -75,17 +71,24 @@
     </div>
 {%- endblock form_row -%}
 
-
 {% block content %}
-    <div class="row">
+    <div class="row" ng-controller="FormCtrl">
         <h1>{{ title }}</h1>
 
         <div class="small-10">
             <div class="row">
-
                 {{ form(form) }}
 
+                <div ng-show="form.$submitted || form1['form1[usename]'].$touched">
+                    <div ng-show="form1['form1[usename]'].$error.required">Tell us your name.</div>
+                </div>
+
+                <div ng-show="form.$submitted || form.uEmail.$touched">
+                    <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
+                    <span ng-show="form.uEmail.$error.email">This is not a valid email.</span>
+                </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
