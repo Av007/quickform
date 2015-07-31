@@ -8,13 +8,73 @@
 
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
-        <div class="small-9 columns">
+        <small class="error">
             {%- for error in errors -%}
-                <small class="error">{{ error.message }}</small>
+                {{ error.message }}<br>
             {%- endfor -%}
-        </div>
+        </small>
     {%- endif -%}
 {%- endblock form_errors -%}
+
+{%- block form_label -%}
+    {% if label is not sameas(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif %}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {%- endif %}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                    }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+
+        {%- if errors|length > 0 -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class ~ ' error')|trim}) %}
+        {%- endif -%}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is sameas(false) ? label : label|trans({}, translation_domain) }}</label>
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{%- block widget_attributes -%}
+    id="{{ id }}" name="{{ full_name }}"
+    {%- if disabled %} disabled="disabled"{% endif -%}
+    {%- if required %} required="required"{% endif -%}
+
+    {%- if errors|length > 0 -%}
+        {% if attr.class is not defined %}
+            {% set attr = attr|merge({'class': 'error'|trim}) %}
+        {% else %}
+            {% set attr = attr|merge({'class': (attr.class ~ ' error')|trim}) %}
+        {% endif %}
+    {%- endif -%}
+
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+        {%- elseif attrvalue is sameas(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not sameas(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{%- endblock widget_attributes -%}
+
+{%- block form_row -%}
+    <div>
+        {{- form_label(form) -}}
+        {{- form_widget(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row -%}
+
 
 {% block content %}
     <div class="row">
@@ -23,28 +83,7 @@
         <div class="small-10">
             <div class="row">
 
-            {#<?php if ($this->formElementErrors($form->get('email'))): ?>
-            <div class="small-3 columns">
-                <?php echo $this->formLabel($form->get('email')->setLabelAttributes(array('class' => 'error'))); ?>
-            </div>
-            <div class="small-9 columns">
-                <?php echo $this->formElement($form->get('email')->setAttributes(array('class' => 'error'))); ?>
-                <small class="error"><?php echo $this->formElementErrors($form->get('email'));?></small>
-            </div>
-            <?php else: ?>
-            <div class="small-3 columns">
-                <?php echo $this->formLabel($form->get('email')); ?>
-            </div>
-            <div class="small-9 columns">
-                <?php echo $this->formElement($form->get('email')); ?>
-            </div>
-            <?php endif; ?>#}
-
-            <form action="#" method="post">
                 {{ form(form) }}
-
-                <input type="submit" name="submit" class="button right"/>
-            </form>
 
             </div>
         </div>

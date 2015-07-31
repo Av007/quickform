@@ -34,42 +34,45 @@ class FormBuilder
                                 $options = array_merge($options, array('required' => $validation['value']));
                             }
 
-                            if ('min' === $key) {
-                                $constrains = array_merge($constrains, array(
-                                    new Assert\Length(array(
-                                        'min'        => $validation['value'],
-                                        'minMessage' => $validation['message'],
-                                    ))
-                                ));
+                            if ($validation['value'] && ('min' === $key)) {
+                                $errorOptions = array('min' => $validation['value']);
+
+                                if ($validation['message']) {
+                                    $errorOptions = array_merge($errorOptions, array('minMessage' => $validation['message']));
+                                }
+
+                                $constrains = array_merge($constrains, array(new Assert\Length($errorOptions)));
                             }
 
-                            if ('max' == $key) {
-                                $constrains = array_merge($constrains, array(
-                                    new Assert\Length(array(
-                                        'max'        => $validation['value'],
-                                        'maxMessage' => $validation['message'],
-                                    ))
-                                ));
+                            if ($validation['value'] && ('max' == $key)) {
+                                $errorOptions = array('max' => $validation['value']);
+
+                                if ($validation['message']) {
+                                    $errorOptions = array_merge($errorOptions, array('maxMessage' => $validation['message']));
+                                }
+
+                                $constrains = array_merge($constrains, array(new Assert\Length($errorOptions)));
                             }
 
                             if ('email' == $key) {
-                                $constrains = array_merge($constrains, array(
-                                    new Assert\Email(array(
-                                        'message' => $validation['message']
-                                    ))
-                                ));
+                                $errorOptions = array();
+
+                                if ($validation['message']) {
+                                    $errorOptions = array_merge($errorOptions, array('message' => $validation['message']));
+                                }
+
+                                $constrains = array_merge($constrains, array(new Assert\Email($errorOptions)));
                             }
 
-                            if ('regexp' == $key) {
-                                $constrains = array_merge($constrains, array(
-                                    new Assert\Regex(array(
-                                        'pattern' => $validation['value'],
-                                        'message' => $validation['message']
-                                    ))
-                                ));
+                            if ($validation['value'] && ('regexp' == $key)) {
+                                $errorOptions = array('pattern' => $validation['value']);
+
+                                if ($validation['message']) {
+                                    $errorOptions = array_merge($errorOptions, array('message' => $validation['message']));
+                                }
+
+                                $constrains = array_merge($constrains, array(new Assert\Regex($errorOptions)));
                             }
-
-
                         }
 
                         if (count($constrains) > 0) {
@@ -78,9 +81,12 @@ class FormBuilder
                     }
 
                     $formSymfonyBuilder->add($field['name'], $field['type'], $options);
-
                 }
             }
+
+            $formSymfonyBuilder->add('submit', 'submit', array(
+                'attr' => array('class' => 'button right')
+            ));
         }
 
         $this->form = $formSymfonyBuilder;

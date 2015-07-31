@@ -16,13 +16,13 @@ form:
             message: Required
           max:
             value: 30
-            message: Max is %value%
+            message: Max is {{ limit }}
           min:
             value: 3
-            Message: Min is %value%
+            message: Min is {{ limit }}
           regexp:
-            value: (w)
-            Message: Используйте для ввода имени русскую раскладку клавиатуры
+            value: /^[а-яА-Я]+$/i
+            message: Используйте для ввода имени русскую раскладку клавиатуры
     1:
       name: email
       type: email
