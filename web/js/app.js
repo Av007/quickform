@@ -4,24 +4,45 @@ $(document).foundation();
 
 angular.module('quickFormApp', [])
     .controller('FormCtrl', ['$scope', function($scope) {
-        $scope.master = {};
+        $scope.message = {};
+        $scope.jsValidation = [];
 
-        $scope.update = function(user) {
-            $scope.master = angular.copy(user);
-        };
+        $scope.getMessage = function(data, name) {
+            if (data[name] != undefined) {
+                var item = $scope.jsValidation[data.$name][name];
 
-        $scope.reset = function(form) {
-            console.log(form);
+                if (item != undefined) {
+                    for (var i = 0; i < item.length; i++) {
 
-            if (form) {
-                console.log(form['form1[usename]']);
-                //console.log((form.form1)[username]);
+                        var validationItem = item[i];
+                        if ((validationItem.validation == 'required') && data[name].$touched && data[name].$error.required) {
+                            $scope.message[name] = {};
+                            $scope.message[name].show = true;
 
-                form.$setPristine();
-                form.$setUntouched();
+                            return validationItem.message;
+                        }
+
+                        if ((validationItem.validation == 'email') && data[name].$touched && data[name].$error.email) {
+                            $scope.message[name] = {};
+                            $scope.message[name].show = true;
+
+                            return validationItem.message;
+                        }
+
+                        $scope.message[name] = {};
+                        $scope.message[name].show = false;
+                    }
+                }
             }
-            $scope.user = angular.copy($scope.master);
+
+            return '';
         };
 
-        $scope.reset();
+        $scope.init = function(data) {
+            $scope.jsValidation = angular.fromJson(data);
+            console.log($scope.jsValidation);
+        };
+
+        //form.$setPristine();
+        //form.$setUntouched();
     }]);

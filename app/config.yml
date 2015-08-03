@@ -1,7 +1,7 @@
 form:
   title: Title
   show: true
-  validation: js # html|js
+  validation: js # html|js|false
   name: form1
   fields:
     0:

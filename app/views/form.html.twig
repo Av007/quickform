@@ -3,12 +3,23 @@
 {% form_theme form _self %}
 
 {%- block form_errors -%}
+    {#{% if form.parent.vars is defined %}
+            {% set angularValidation = form.parent.vars.name ~ "['" ~ form.vars.full_name ~ "']" %}
+        {% else %}
+            {% set angularValidation = form.vars.full_name %}
+        {% endif %}#}
+
+    {% set angularValidation = form.vars.full_name %}
+
     {%- if errors|length > 0 -%}
         <small class="error">
             {%- for error in errors -%}
                 {{ error.message }}<br>
             {%- endfor -%}
         </small>
+    {% else %}
+        <small ng-show="message['{{ angularValidation }}'].show"
+               ng-class="{'error': message['{{ angularValidation }}'].show}">{{ '{{ getMessage(form1, "' ~ angularValidation ~ '") }}' }}</small>
     {%- endif -%}
 {%- endblock form_errors -%}
 
@@ -31,6 +42,9 @@
             {%- endif -%}
         {%- endif -%}
 
+        {% set angularValidation = form.vars.full_name %}
+        {% set label_attr = label_attr|merge({'ng-class': "{'error': message['" ~ angularValidation ~ "'].show}"}) %}
+
         {%- if errors|length > 0 -%}
             {% set label_attr = label_attr|merge({'class': (label_attr.class ~ ' error')|trim}) %}
         {%- endif -%}
@@ -42,6 +56,9 @@
     id="{{ id }}" name="{{ full_name }}"
     {%- if disabled %} disabled="disabled"{% endif -%}
     {%- if required %} required="required"{% endif -%}
+
+    {% set angularValidation = form.vars.full_name %}
+    {% set attr = attr|merge({'ng-class': "{'error': message['" ~ angularValidation ~ "'].show}"}) %}
 
     {%- if errors|length > 0 -%}
         {% if attr.class is not defined %}
@@ -72,23 +89,13 @@
 {%- endblock form_row -%}
 
 {% block content %}
-    <div class="row" ng-controller="FormCtrl">
+    <div class="row" ng-controller="FormCtrl" ng-init="init('{{ jsValidation }}')">
         <h1>{{ title }}</h1>
 
         <div class="small-10">
             <div class="row">
                 {{ form(form) }}
-
-                <div ng-show="form.$submitted || form1['form1[usename]'].$touched">
-                    <div ng-show="form1['form1[usename]'].$error.required">Tell us your name.</div>
-                </div>
-
-                <div ng-show="form.$submitted || form.uEmail.$touched">
-                    <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
-                    <span ng-show="form.uEmail.$error.email">This is not a valid email.</span>
-                </div>
             </div>
         </div>
     </div>
-
 {% endblock %}

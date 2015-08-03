@@ -12,6 +12,8 @@ class FormBuilder
     protected $form;
     /** @var string $formName */
     protected $formName;
+    /** @var array $jsValidation */
+    protected $jsValidation = array();
 
     /**
      * Initialization
@@ -38,7 +40,6 @@ class FormBuilder
             foreach ($structure['form']['fields'] as $field) {
 
                 if ($field['show']) {
-
                     // validations
                     $options = array();
                     $constrains = array();
@@ -46,7 +47,13 @@ class FormBuilder
                         foreach ($field['validation'] as $key => $validation) {
 
                             if ('required' === $key) {
-                                $constrains = array_merge($constrains, array(new Assert\NotBlank(array('message' => $validation['message']))));
+                                $currentConstrain = new Assert\NotBlank(array('message' => $validation['message']));
+                                $this->addJsValidation(array(
+                                    'field'      => $field['name'],
+                                    'message'    => $currentConstrain->message,
+                                    'validation' => $key,
+                                ));
+                                $constrains = array_merge($constrains, array($currentConstrain));
                                 $options = array_merge($options, array('required' => $validation['value']));
                             }
 
@@ -56,8 +63,14 @@ class FormBuilder
                                 if ($validation['message']) {
                                     $errorOptions = array_merge($errorOptions, array('minMessage' => $validation['message']));
                                 }
+                                $currentConstrain = new Assert\Length($errorOptions);
+                                $this->addJsValidation(array(
+                                    'field'      => $field['name'],
+                                    'message'    => $currentConstrain->minMessage,
+                                    'validation' => $key,
+                                ));
 
-                                $constrains = array_merge($constrains, array(new Assert\Length($errorOptions)));
+                                $constrains = array_merge($constrains, array($currentConstrain));
                             }
 
                             if ($validation['value'] && ('max' == $key)) {
@@ -66,8 +79,14 @@ class FormBuilder
                                 if ($validation['message']) {
                                     $errorOptions = array_merge($errorOptions, array('maxMessage' => $validation['message']));
                                 }
+                                $currentConstrain = new Assert\Length($errorOptions);
+                                $this->addJsValidation(array(
+                                    'field'      => $field['name'],
+                                    'message'    => $currentConstrain->maxMessage,
+                                    'validation' => $key,
+                                ));
 
-                                $constrains = array_merge($constrains, array(new Assert\Length($errorOptions)));
+                                $constrains = array_merge($constrains, array($currentConstrain));
                             }
 
                             if ('email' == $key) {
@@ -76,8 +95,14 @@ class FormBuilder
                                 if ($validation['message']) {
                                     $errorOptions = array_merge($errorOptions, array('message' => $validation['message']));
                                 }
+                                $currentConstrain = new Assert\Email($errorOptions);
+                                $this->addJsValidation(array(
+                                    'field'      => $field['name'],
+                                    'message'    => $currentConstrain->message,
+                                    'validation' => $key,
+                                ));
 
-                                $constrains = array_merge($constrains, array(new Assert\Email($errorOptions)));
+                                $constrains = array_merge($constrains, array($currentConstrain));
                             }
 
                             if ($validation['value'] && ('regexp' == $key)) {
@@ -87,7 +112,13 @@ class FormBuilder
                                     $errorOptions = array_merge($errorOptions, array('message' => $validation['message']));
                                 }
 
-                                $constrains = array_merge($constrains, array(new Assert\Regex($errorOptions)));
+                                $currentConstrain = new Assert\Regex($errorOptions);
+                                $this->addJsValidation(array(
+                                    'field'      => $field['name'],
+                                    'message'    => $currentConstrain->message,
+                                    'validation' => $key,
+                                ));
+                                $constrains = array_merge($constrains, array($currentConstrain));
                             }
                         }
 
@@ -107,6 +138,22 @@ class FormBuilder
         }
 
         $this->form = $formBuilder;
+    }
+
+    /**
+     * @param array $item
+     */
+    protected function addJsValidation($item)
+    {
+        $this->jsValidation[$this->formName . "[" . $item['field'] . "]"][] = $item;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJsValidation()
+    {
+        return json_encode(array($this->formName => $this->jsValidation));
     }
 
     /**
