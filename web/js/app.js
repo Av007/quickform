@@ -3,7 +3,7 @@
 $(document).foundation();
 
 angular.module('quickFormApp', [])
-    .controller('FormCtrl', ['$scope', function($scope) {
+    .controller('FormCtrl', ['$scope', '$parse', function($scope, $parse) {
         $scope.message = {};
         $scope.jsValidation = [];
         $scope.display = false;
@@ -20,6 +20,11 @@ angular.module('quickFormApp', [])
         };
 
         $scope.getMessage = function(data, name) {
+            // TODO: move to another place
+            var form = Object.keys($scope.jsValidation)[0];
+            var model = $parse(form);
+            model.assign($scope, $scope.formData);
+
             var message = '';
 
             if (data[name] != undefined) {
@@ -58,7 +63,8 @@ angular.module('quickFormApp', [])
             return $scope.display || field.$touched
         }
 
-        $scope.init = function(data) {
+        $scope.init = function(data, formData) {
             $scope.jsValidation = angular.fromJson(data);
+            $scope.formData = angular.fromJson(formData);
         };
     }]);

@@ -3,12 +3,6 @@
 {% form_theme form _self %}
 
 {%- block form_errors -%}
-    {#{% if form.parent.vars is defined %}
-            {% set angularValidation = form.parent.vars.name ~ "['" ~ form.vars.full_name ~ "']" %}
-        {% else %}
-            {% set angularValidation = form.vars.full_name %}
-        {% endif %}#}
-
     {% set angularValidation = form.vars.full_name %}
 
     {%- if errors|length > 0 -%}
@@ -89,7 +83,7 @@
 {%- endblock form_row -%}
 
 {% block content %}
-    <div class="row" ng-controller="FormCtrl" ng-init="init('{{ jsValidation }}')">
+    <div class="row" ng-controller="FormCtrl" ng-init="init('{{ jsValidation }}', '{{ form.vars.value|json_encode() }}')">
         <h1>{{ title }}</h1>
 
         <div class="small-10">

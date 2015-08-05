@@ -69,6 +69,10 @@ class FormBuilder
                             $attr = array_merge($attr, array('ng-required' => 'false'));
                         }
 
+                        /*if (isset($options['constraints'][3]->pattern)) {
+                            $attr = array_merge($attr, array('ng-pattern' => $options['constraints'][3]->pattern));
+                        }*/
+
                         $options = array_merge($options, array('attr' => $attr));
                     }
 
