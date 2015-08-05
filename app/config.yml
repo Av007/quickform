@@ -25,6 +25,8 @@ form:
       name: email
       type: email
       show: true
+      validation:
+        email: []
     2:
       name: phone
       type: text

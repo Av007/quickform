@@ -1,6 +1,6 @@
 <?php
 
-use Quickform\Entity\FormBuilder;
+use Quickform\Models\FormBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Parser;

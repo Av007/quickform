@@ -50,5 +50,6 @@ $app['swiftmailer.options'] = array(
 require_once MAIN_PATH . '/controllers/error.php';
 require_once MAIN_PATH . '/controllers/form.php';
 require_once MAIN_PATH . '/models/FormBuilder.php';
+require_once MAIN_PATH . '/models/Validation.php';
 
 $app->run();
