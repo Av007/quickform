@@ -9,8 +9,7 @@ angular.module('quickFormApp', [])
         $scope.display = false;
 
         $scope.submit = function ($event) {
-            var form = Object.keys($scope.jsValidation)[0];
-
+            var form = $event.target.name;
             // verify form
             $scope.display = $scope[form].$invalid;
 
@@ -20,39 +19,34 @@ angular.module('quickFormApp', [])
         };
 
         $scope.getMessage = function(data, name) {
-            // TODO: move to another place
-            var form = Object.keys($scope.jsValidation)[0];
-            var model = $parse(form);
-            model.assign($scope, $scope.formData);
+            /*var model = $parse('form1');
+            model.assign($scope, $scope.formData);*/
 
             var message = '';
 
-            if (data[name] != undefined) {
-                var item = $scope.jsValidation[data.$name][name];
+            if ($scope[data.$name][name] != undefined) {
+                var validations = angular.element('form[name="' + data.$name + '"] input').data('validation');
 
-                if (item != undefined) {
-                    for (var i = 0; i < item.length; i++) {
+                for (var i = 0; i < validations.length; i++) {
 
-                        var validationItem = item[i];
-                        if ((validationItem.validation == 'required') && show(data[name]) && data[name].$error.required) {
-                            $scope.message[name] = {};
-                            $scope.message[name].show = true;
-
-                            message = validationItem.message;
-                            break;
-                        }
-
-                        if ((validationItem.validation == 'email') && show(data[name]) && data[name].$error.email) {
-                            $scope.message[name] = {};
-                            $scope.message[name].show = true;
-
-                            message = validationItem.message;
-                            break;
-                        }
-
+                    if ((validations[i].validation == 'required') && show(data[name]) && data[name].$error.required) {
                         $scope.message[name] = {};
-                        $scope.message[name].show = false;
+                        $scope.message[name].show = true;
+
+                        message = validations[i].message;
+                        break;
                     }
+
+                    if ((validations[i].validation == 'email') && show(data[name]) && data[name].$error.email) {
+                        $scope.message[name] = {};
+                        $scope.message[name].show = true;
+
+                        message = validations[i].message;
+                        break;
+                    }
+
+                    $scope.message[name] = {};
+                    $scope.message[name].show = false;
                 }
             }
 
@@ -62,9 +56,4 @@ angular.module('quickFormApp', [])
         function show(field) {
             return $scope.display || field.$touched
         }
-
-        $scope.init = function(data, formData) {
-            $scope.jsValidation = angular.fromJson(data);
-            $scope.formData = angular.fromJson(formData);
-        };
     }]);

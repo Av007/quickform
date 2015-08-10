@@ -28,9 +28,8 @@ $app->match('/', function(Request $request) use ($app) {
     }
 
     return $app['twig']->render('form.html.twig', array(
-        'title'        => $config['form']['title'],
-        'form'         => $form->createView(),
-        'jsValidation' => $formBuilder->getJsValidation(),
+        'title' => $config['form']['title'],
+        'form'  => $form->createView(),
     ));
 })->bind('form');
 
