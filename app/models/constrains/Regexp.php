@@ -22,12 +22,17 @@ class Regexp
      */
     public function __construct($validation, $jsValidation = false)
     {
-
         $errorOptions = array('pattern' => $validation->getValue());
 
         if ($validation->getMessage()) {
             $errorOptions = array_merge($errorOptions, array('message' => $validation->getMessage()));
         }
+
+        if ($jsValidation) {
+            $this->options['attr'] = array();
+            $this->options['attr']['ng-pattern'] = $validation->getValue();
+        }
+
         $this->jsValidation = $jsValidation;
         $this->validation = $validation;
         $this->constrain = new Assert\Regex($errorOptions);

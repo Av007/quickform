@@ -27,6 +27,12 @@ class Max
         if ($validation->getMessage()) {
             $errorOptions = array_merge($errorOptions, array('maxMessage' => $validation->getMessage()));
         }
+
+        if ($jsValidation) {
+            $this->options['attr'] = array();
+            $this->options['attr']['ng-maxlength'] = $validation->getValue();
+        }
+
         $this->jsValidation = $jsValidation;
         $this->validation = $validation;
         $this->constrain = new Assert\Length($errorOptions);
@@ -59,7 +65,7 @@ class Max
 
         return array(
             'field'      => $this->validation->getName(),
-            'message'    => $this->constrain->maxMessage,
+            'message'    => str_replace('{{ limit }}', $this->validation->getValue(), $this->constrain->maxMessage),
             'validation' => $this->validation->getKey(),
         );
     }

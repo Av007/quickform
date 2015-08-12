@@ -28,6 +28,11 @@ class Min
             $errorOptions = array_merge($errorOptions, array('minMessage' => $validation->getMessage()));
         }
 
+        if ($jsValidation) {
+            $this->options['attr'] = array();
+            $this->options['attr']['ng-minlength'] = $validation->getValue();
+        }
+
         $this->jsValidation = $jsValidation;
         $this->validation = $validation;
         $this->constrain = new Assert\Length($errorOptions);
@@ -60,7 +65,7 @@ class Min
 
         return array(
             'field'      => $this->validation->getName(),
-            'message'    => $this->constrain->minMessage,
+            'message'    => str_replace('{{ limit }}', $this->validation->getValue(), $this->constrain->minMessage),
             'validation' => $this->validation->getKey(),
         );
     }

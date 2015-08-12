@@ -12,6 +12,7 @@ angular.module('quickFormApp', [])
             var form = $event.target.name;
             // verify form
             $scope.display = $scope[form].$invalid;
+            console.log($scope[form].$error);
 
             if ($scope.display) {
                 $event.preventDefault();
@@ -38,6 +39,30 @@ angular.module('quickFormApp', [])
                     }
 
                     if ((validations[i].validation == 'email') && show(data[name]) && data[name].$error.email) {
+                        $scope.message[name] = {};
+                        $scope.message[name].show = true;
+
+                        message = validations[i].message;
+                        break;
+                    }
+
+                    if ((validations[i].validation == 'min') && show(data[name]) && data[name].$error.minlength) {
+                        $scope.message[name] = {};
+                        $scope.message[name].show = true;
+
+                        message = validations[i].message;
+                        break;
+                    }
+
+                    if ((validations[i].validation == 'max') && show(data[name]) && data[name].$error.maxlength) {
+                        $scope.message[name] = {};
+                        $scope.message[name].show = true;
+
+                        message = validations[i].message;
+                        break;
+                    }
+
+                    if ((validations[i].validation == 'regexp') && show(data[name]) && data[name].$error.pattern) {
                         $scope.message[name] = {};
                         $scope.message[name].show = true;
 

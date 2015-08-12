@@ -58,7 +58,7 @@ class FormBuilder
 
                         foreach ($field['validation'] as $key => $validation) {
                             $data = $this->setValidation(new Validation($key, $field['name'], $validation));
-                            $options = array_merge($options, $data->getOptions());;
+                            $options = array_merge_recursive($options, $data->getOptions());;
                             $constrains = array_merge($constrains, array($data->getConstrains()));
                             $attributes[] = $data->getJsValidation();
                         }
@@ -100,13 +100,6 @@ class FormBuilder
      */
     protected function setValidation(Validation $validationClass)
     {
-        /**
-         * TODO: add logic
-         * ng-required
-         * ng-minlength="{ number }"
-         * ng-maxlength="{ number }"
-         * ng-pattern="{ string }"
-         */
         if ('required' === $validationClass->getKey()) {
             return new Constrains\Required($validationClass, 'js' === $this->validationType);
         } elseif ($validationClass->getValue() && ('min' === $validationClass->getKey())) {
