@@ -53,6 +53,9 @@
 
     {% set angularValidation = form.vars.full_name %}
     {% set attr = attr|merge({'ng-class': "{'error': message['" ~ angularValidation ~ "'].show}"}) %}
+    {% if (attr['ng-model'] is defined) %}
+        {% set attr = attr|merge({'ng-init': attr['ng-model'] ~ '="' ~ form.vars.value ~ '"'}) %}
+    {% endif %}
 
     {%- if errors|length > 0 -%}
         {% if attr.class is not defined %}

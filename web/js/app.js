@@ -3,16 +3,14 @@
 $(document).foundation();
 
 angular.module('quickFormApp', [])
-    .controller('FormCtrl', ['$scope', '$parse', function($scope, $parse) {
+    .controller('FormCtrl', ['$scope', function($scope) {
         $scope.message = {};
         $scope.jsValidation = [];
-        $scope.display = false;
 
         $scope.submit = function ($event) {
             var form = $event.target.name;
             // verify form
             $scope.display = $scope[form].$invalid;
-            console.log($scope[form].$error);
 
             if ($scope.display) {
                 $event.preventDefault();
@@ -20,49 +18,25 @@ angular.module('quickFormApp', [])
         };
 
         $scope.getMessage = function(data, name) {
-            /*var model = $parse('form1');
-            model.assign($scope, $scope.formData);*/
-
             var message = '';
+            var element = angular.element('form[name="' + data.$name + '"] input');
+
+            if (data[name] == undefined) {
+                return message;
+            }
 
             if ($scope[data.$name][name] != undefined) {
-                var validations = angular.element('form[name="' + data.$name + '"] input').data('validation');
+                var validations = element.data('validation');
 
                 for (var i = 0; i < validations.length; i++) {
-
-                    if ((validations[i].validation == 'required') && show(data[name]) && data[name].$error.required) {
-                        $scope.message[name] = {};
-                        $scope.message[name].show = true;
-
-                        message = validations[i].message;
-                        break;
-                    }
-
-                    if ((validations[i].validation == 'email') && show(data[name]) && data[name].$error.email) {
-                        $scope.message[name] = {};
-                        $scope.message[name].show = true;
-
-                        message = validations[i].message;
-                        break;
-                    }
-
-                    if ((validations[i].validation == 'min') && show(data[name]) && data[name].$error.minlength) {
-                        $scope.message[name] = {};
-                        $scope.message[name].show = true;
-
-                        message = validations[i].message;
-                        break;
-                    }
-
-                    if ((validations[i].validation == 'max') && show(data[name]) && data[name].$error.maxlength) {
-                        $scope.message[name] = {};
-                        $scope.message[name].show = true;
-
-                        message = validations[i].message;
-                        break;
-                    }
-
-                    if ((validations[i].validation == 'regexp') && show(data[name]) && data[name].$error.pattern) {
+                    if (show(data[name]) && (
+                        (((validations[i].validation == 'required')) && data[name].$error.required) ||
+                        ((validations[i].validation == 'email') && data[name].$error.email) ||
+                        ((validations[i].validation == 'min') && data[name].$error.minlength) ||
+                        ((validations[i].validation == 'max') && data[name].$error.maxlength) ||
+                        ((validations[i].validation == 'regexp') && data[name].$error.pattern)
+                        )
+                    ) {
                         $scope.message[name] = {};
                         $scope.message[name].show = true;
 
