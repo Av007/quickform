@@ -5,15 +5,20 @@
 {%- block form_errors -%}
     {% set angularValidation = form.vars.full_name %}
 
+    {%- if form.parent.vars is defined -%}
+        {% set formName = form.parent.vars.name %}
+    {% else %}
+        {% set formName = form.vars.name %}
+    {%- endif -%}
+
     {%- if errors|length > 0 -%}
-        <small class="error">
+        <small class="error" ng-show="{{ 'showError(' ~ formName ~ ', "' ~ angularValidation ~ '")' }}">
             {%- for error in errors -%}
                 {{ error.message }}<br>
             {%- endfor -%}
         </small>
     {% else %}
-        <small ng-show="message['{{ angularValidation }}'].show"
-               ng-class="{'error': message['{{ angularValidation }}'].show}">{{ '{{ getMessage(form1, "' ~ angularValidation ~ '") }}' }}</small>
+        <small ng-show="message['{{ angularValidation }}'].show" class="error">{{ '{{ getMessage(' ~ formName ~ ', "' ~ angularValidation ~ '") }}' }}</small>
     {%- endif -%}
 {%- endblock form_errors -%}
 

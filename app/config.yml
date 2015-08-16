@@ -19,7 +19,7 @@ form:
             value: 3
             message: Min is {{ limit }}
           regexp:
-            value: /^[а-яА-Я]+$/i
+            value: /[а-яА-Я]/
             message: Используйте для ввода имени русскую раскладку клавиатуры
     1:
       name: email

@@ -5,7 +5,6 @@ $(document).foundation();
 angular.module('quickFormApp', [])
     .controller('FormCtrl', ['$scope', function($scope) {
         $scope.message = {};
-        $scope.jsValidation = [];
 
         $scope.submit = function ($event) {
             var form = $event.target.name;
@@ -19,14 +18,13 @@ angular.module('quickFormApp', [])
 
         $scope.getMessage = function(data, name) {
             var message = '';
-            var element = angular.element('form[name="' + data.$name + '"] input');
 
             if (data[name] == undefined) {
                 return message;
             }
 
             if ($scope[data.$name][name] != undefined) {
-                var validations = element.data('validation');
+                var validations = angular.element('form[name="' + data.$name + '"] input').data('validation');
 
                 for (var i = 0; i < validations.length; i++) {
                     if (show(data[name]) && (
@@ -50,6 +48,13 @@ angular.module('quickFormApp', [])
             }
 
             return message;
+        };
+
+        $scope.showError = function(data, name) {
+            $scope.display = true;
+            $scope.getMessage(data, name);
+
+            return $scope.message[name].show;
         };
 
         function show(field) {
