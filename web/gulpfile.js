@@ -2,11 +2,12 @@ var gulp = require('gulp');
 
 gulp.task('default', function() {
     var jsFiles = [
-        'bower_components/jquery/dist/jquery.js',
+        'bower_components/jquery/dist/jquery.min.js',
         'bower_components/modernizr/modernizr.js',
         'bower_components/foundation/js/foundation.min.js',
         'bower_components/angularjs/angular.min.js',
-        'bower_components/angularjs/angular.min.js.map'
+        'bower_components/angularjs/angular.min.js.map',
+        'bower_components/jquery.maskedinput/dist/jquery.maskedinput.min.js'
     ];
     gulp.src(jsFiles)
         .pipe(gulp.dest('js/vendor'));

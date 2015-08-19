@@ -52,6 +52,7 @@ require_once MAIN_PATH . '/controllers/form.php';
 require_once MAIN_PATH . '/models/FormBuilder.php';
 require_once MAIN_PATH . '/models/Validation.php';
 require_once MAIN_PATH . '/models/constrains/Email.php';
+require_once MAIN_PATH . '/models/constrains/Phone.php';
 require_once MAIN_PATH . '/models/constrains/Regexp.php';
 require_once MAIN_PATH . '/models/constrains/Required.php';
 require_once MAIN_PATH . '/models/constrains/Max.php';

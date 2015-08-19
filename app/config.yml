@@ -32,8 +32,8 @@ form:
       type: text
       show: true
       validation:
-        regexp:
-          value: /^\(\d{3}\) \d{3}-\d{4}$/
+        phone:
+          value: +(999) 99-999-999
           message: Incorrect phone number format
     3:
       name: message

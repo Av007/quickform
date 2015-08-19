@@ -24,26 +24,38 @@ angular.module('quickFormApp', [])
             }
 
             if ($scope[data.$name][name] != undefined) {
-                var validations = angular.element('form[name="' + data.$name + '"] input').data('validation');
+                var selector = 'form[name="' + data.$name + '"] input[name="' + name + '"], ' +
+                                'form[name="' + data.$name + '"] textarea[name="' + name + '"]';
 
-                for (var i = 0; i < validations.length; i++) {
-                    if (show(data[name]) && (
-                        (((validations[i].validation == 'required')) && data[name].$error.required) ||
-                        ((validations[i].validation == 'email') && data[name].$error.email) ||
-                        ((validations[i].validation == 'min') && data[name].$error.minlength) ||
-                        ((validations[i].validation == 'max') && data[name].$error.maxlength) ||
-                        ((validations[i].validation == 'regexp') && data[name].$error.pattern)
-                        )
-                    ) {
+                var element = angular.element(selector);
+                var validations = element.data('validation');
+
+                if (element.data('mask')) {
+                    element.mask(element.data('mask'));
+                }
+
+                if (validations != undefined) {
+                    for (var i = 0; i < validations.length; i++) {
+
+                        if (show(data[name]) && (
+                            (((validations[i].validation == 'required')) && data[name].$error.required) ||
+                            ((validations[i].validation == 'email') && data[name].$error.email) ||
+                            ((validations[i].validation == 'min') && data[name].$error.minlength) ||
+                            ((validations[i].validation == 'max') && data[name].$error.maxlength) ||
+                            ((validations[i].validation == 'regexp') && data[name].$error.pattern) ||
+                            ((validations[i].validation == 'phone') && data[name].$error.pattern)
+                            )
+                        ) {
+                            $scope.message[name] = {};
+                            $scope.message[name].show = true;
+
+                            message = validations[i].message;
+                            break;
+                        }
+
                         $scope.message[name] = {};
-                        $scope.message[name].show = true;
-
-                        message = validations[i].message;
-                        break;
+                        $scope.message[name].show = false;
                     }
-
-                    $scope.message[name] = {};
-                    $scope.message[name].show = false;
                 }
             }
 
@@ -60,4 +72,5 @@ angular.module('quickFormApp', [])
         function show(field) {
             return $scope.display || field.$touched
         }
-    }]);
+    }]
+);

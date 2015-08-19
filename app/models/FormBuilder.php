@@ -110,6 +110,8 @@ class FormBuilder
             return new Constrains\Email($validationClass, 'js' === $this->validationType);
         } elseif ($validationClass->getValue() && ('regexp' == $validationClass->getKey())) {
             return new Constrains\Regexp($validationClass, 'js' === $this->validationType);
+        } elseif ($validationClass->getValue() && ('phone' == $validationClass->getKey())) {
+            return new Constrains\Phone($validationClass, 'js' === $this->validationType);
         }
 
         throw new \LogicException('Can\'t find form type');
