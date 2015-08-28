@@ -8,6 +8,7 @@ form:
       name: usename
       type: text
       show: true
+      label: UsrNam
       validation:
           required:
             value: true
@@ -45,14 +46,12 @@ form:
           message: вы наверное забыли написать нам сообщение
     4:
       name: attachment
-      label: file
+      label: Attachment
       type: collection
-      typeOf: file
       show: true
       validation:
         file:
           maxSize: 5M
           # http://www.iana.org/assignments/media-types/media-types.xhtml
-#          mimeTypes: jpg;jpeg;gif;png;doc;docx;rtf;xls;xlsx;pdf
-          mimeTypes: jpg;jpeg
+          mimeTypes: jpg;jpeg;gif;png;doc;docx;rtf;xls;xlsx;pdf
 

@@ -42,6 +42,7 @@ class FormBuilder
             ));
         }
 
+        // sets defaults
         $defaults = array();
         foreach ($structure['form']['fields'] as $field) {
             if ($field['type'] == 'collection' && $field['show']) {
@@ -63,6 +64,10 @@ class FormBuilder
                     $constrains = array();
                     $attributes = array();
                     if (isset($field['validation']) && $field['validation']) {
+
+                        if (isset($field['label']) && $field['label']) {
+                            $options['label'] = $field['label'];
+                        }
 
                         foreach ($field['validation'] as $key => $validation) {
                             $data = $this->setValidation(new Validation($key, $field['name'], $validation));
@@ -87,7 +92,7 @@ class FormBuilder
                     }
 
                     // collection field
-                    if (isset($field['typeOf'])) {
+                    if ($field['type'] == 'collection') {
                         $options['type']         = new FileType($validation);
                         $options['allow_add']    = true;
                         $options['allow_delete'] = true;

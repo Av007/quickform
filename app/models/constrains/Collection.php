@@ -24,8 +24,8 @@ class Collection
     {
         $this->validation = $validation;
 
-        $this->constrain = new Assert\Collection(array(
-
+        $this->constrain = new Assert\Count(array(
+            'max' => 4
         ));
 
         $this->options = array_merge($this->options, array('required' => $this->validation->getValue()));

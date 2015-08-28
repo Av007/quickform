@@ -107,7 +107,7 @@
 
 {%- block form_row -%}
     {% if (type is defined and type == 'file')
-            or name == '0' %}
+            or 'attachment' == form.parent.vars.name %}
         {{- form_widget(form) -}}
         {{- form_errors(form) -}}
     {% else %}
