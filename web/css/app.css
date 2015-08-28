@@ -1,0 +1,9 @@
+ul.attachment {
+    list-style-type: none;
+}
+
+ul.attachment a.remove-tag {
+    position: relative;
+    float: right;
+    top: -33px;
+}

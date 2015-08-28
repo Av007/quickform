@@ -5,6 +5,7 @@ namespace Quickform\Models;
 use Quickform\Models\Constrains;
 use Symfony\Component\Form\FormFactory;
 use \Symfony\Component\Form\FormBuilder as FormSymfonyBuilder;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class FormBuilder
@@ -41,10 +42,17 @@ class FormBuilder
             ));
         }
 
+        $defaults = array();
+        foreach ($structure['form']['fields'] as $field) {
+            if ($field['type'] == 'collection' && $field['show']) {
+                $defaults = array('attachment' => array(array('file' => new File('%kernel.root_dir%/../web/', false))));
+            }
+        }
+
         $this->formName = $structure['form']['name'];
 
         /** @var FormSymfonyBuilder $formBuilder */
-        $formBuilder = $formFactory->createNamedBuilder($this->formName, 'form', null, $formOptions);
+        $formBuilder = $formFactory->createNamedBuilder($this->formName, 'form', $defaults, $formOptions);
 
         if ($structure && $structure['form']['show']) {
             foreach ($structure['form']['fields'] as $field) {
@@ -73,9 +81,16 @@ class FormBuilder
                         }
 
                         if (count($constrains) > 0) {
-                            $options['attr'] = array_merge($options['attr'], array('data-validation' => json_encode($attributes)));
+                            $options['attr']        = array_merge($options['attr'], array('data-validation' => json_encode($attributes)));
                             $options['constraints'] = $constrains;
                         }
+                    }
+
+                    // collection field
+                    if (isset($field['typeOf'])) {
+                        $options['type']         = new FileType($validation);
+                        $options['allow_add']    = true;
+                        $options['allow_delete'] = true;
                     }
 
                     $formBuilder->add($field['name'], $field['type'], $options);
@@ -83,9 +98,7 @@ class FormBuilder
             }
 
             $formBuilder->add('submit', 'submit', array(
-                'attr' => array(
-                    'class' => 'button right',
-                )
+                'attr' => array('class' => 'button right')
             ));
         }
 
@@ -112,24 +125,11 @@ class FormBuilder
             return new Constrains\Regexp($validationClass, 'js' === $this->validationType);
         } elseif ($validationClass->getValue() && ('phone' == $validationClass->getKey())) {
             return new Constrains\Phone($validationClass, 'js' === $this->validationType);
+        } elseif ('file' == $validationClass->getKey()) {
+            return new Constrains\Collection($validationClass);
         }
 
         throw new \LogicException('Can\'t find form type');
-    }
-
-    /**
-     * @param       $constrains
-     * @param       $options
-     * @param array $dataValidation
-     * @return array
-     */
-    protected function getData($constrains, $options, $dataValidation = array())
-    {
-        return array(
-            'options'    => $options,
-            'constrains' => $constrains,
-            'attributes' => $dataValidation,
-        );
     }
 
     /**

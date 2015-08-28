@@ -43,5 +43,16 @@ form:
         required:
           value: true
           message: вы наверное забыли написать нам сообщение
-
+    4:
+      name: attachment
+      label: file
+      type: collection
+      typeOf: file
+      show: true
+      validation:
+        file:
+          maxSize: 5M
+          # http://www.iana.org/assignments/media-types/media-types.xhtml
+#          mimeTypes: jpg;jpeg;gif;png;doc;docx;rtf;xls;xlsx;pdf
+          mimeTypes: jpg;jpeg
 

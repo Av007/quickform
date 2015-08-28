@@ -6,18 +6,19 @@ class Validation
 {
     /** @var string $name */
     protected $name;
-
     /** @var string $message */
     protected $message;
-
     /** @var string $key */
     protected $key;
-
     /** @var string $value */
     protected $value;
+    /** @var array $data */
+    protected $data;
 
     /**
-     * @param array $data
+     * @param string $key
+     * @param string $name
+     * @param array  $data
      */
     public function __construct($key, $name, array $data)
     {
@@ -25,6 +26,7 @@ class Validation
         $this->key = $key;
         $this->message = isset($data['message']) ? $data['message'] : null;
         $this->value = isset($data['value']) ? $data['value'] : null;
+        $this->data = $data;
     }
 
     /**
@@ -89,5 +91,21 @@ class Validation
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
     }
 }

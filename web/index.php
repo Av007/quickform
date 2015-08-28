@@ -57,5 +57,7 @@ require_once MAIN_PATH . '/models/constrains/Regexp.php';
 require_once MAIN_PATH . '/models/constrains/Required.php';
 require_once MAIN_PATH . '/models/constrains/Max.php';
 require_once MAIN_PATH . '/models/constrains/Min.php';
+require_once MAIN_PATH . '/models/constrains/Collection.php';
+require_once MAIN_PATH . '/models/FileType.php';
 
 $app->run();

@@ -11,16 +11,39 @@
         {% set formName = form.vars.name %}
     {%- endif -%}
 
-    {%- if errors|length > 0 -%}
-        <small class="error" ng-show="{{ 'showError(' ~ formName ~ ', "' ~ angularValidation ~ '")' }}">
+    {% if (type is not defined
+            or type != 'file')
+            and formName != 'attachment' %}
+        {%- if errors|length > 0 -%}
+            <small class="error" ng-show="{{ 'showError(' ~ formName ~ ', "' ~ angularValidation ~ '")' }}">
+                {%- for error in errors -%}
+                    {{ error.message }}<br>
+                {%- endfor -%}
+            </small>
+        {% else %}
+            <small ng-show="message['{{ angularValidation }}'].show" class="error">{{ '{{ getMessage(' ~ formName ~ ', "' ~ angularValidation ~ '") }}' }}</small>
+        {%- endif -%}
+    {% elseif (errors|length > 0) %}
+        <small class="error">
             {%- for error in errors -%}
                 {{ error.message }}<br>
             {%- endfor -%}
         </small>
-    {% else %}
-        <small ng-show="message['{{ angularValidation }}'].show" class="error">{{ '{{ getMessage(' ~ formName ~ ', "' ~ angularValidation ~ '") }}' }}</small>
     {%- endif -%}
 {%- endblock form_errors -%}
+
+{%- block collection_widget -%}
+    {% if prototype is defined %}
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {% endif %}
+    {{- block('form_widget_collection') -}}
+{%- endblock collection_widget -%}
+
+{%- block form_widget_collection -%}
+    <ul class="{{ name }}" {{ block('widget_container_attributes') }}>
+        <li>{{- block('form_widget') -}}<a href="#" class="remove-tag"><i class="fi-x"></i></a></li>
+    </ul>
+{%- endblock form_widget_collection -%}
 
 {%- block form_label -%}
     {% if label is not sameas(false) -%}
@@ -83,11 +106,17 @@
 {%- endblock widget_attributes -%}
 
 {%- block form_row -%}
-    <div>
-        {{- form_label(form) -}}
+    {% if (type is defined and type == 'file')
+            or name == '0' %}
         {{- form_widget(form) -}}
         {{- form_errors(form) -}}
-    </div>
+    {% else %}
+        <div>
+            {{- form_label(form) -}}
+            {{- form_widget(form) -}}
+            {{- form_errors(form) -}}
+        </div>
+    {% endif %}
 {%- endblock form_row -%}
 
 {% block content %}
