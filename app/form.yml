@@ -1,0 +1,57 @@
+form:
+  title: Title
+  show: true
+  validation: js # html|js|false
+  name: form1
+  fields:
+    0:
+      name: usename
+      type: text
+      show: true
+      label: First name
+      validation:
+          required:
+            value: true
+            message: Required
+          max:
+            value: 30
+            message: Max is {{ limit }}
+          min:
+            value: 3
+            message: Min is {{ limit }}
+          regexp:
+            value: /[а-яА-Я]/
+            message: Используйте для ввода имени русскую раскладку клавиатуры
+    1:
+      name: email
+      type: email
+      show: true
+      validation:
+        email: []
+    2:
+      name: phone
+      type: text
+      show: true
+      validation:
+        phone:
+          value: +(999) 99-999-999
+          message: Incorrect phone number format
+    3:
+      name: message
+      type: textarea
+      show: true
+      validation:
+        required:
+          value: true
+          message: вы наверное забыли написать нам сообщение
+    4:
+      name: attachment
+      label: Attachment
+      type: collection
+      show: true
+      validation:
+        file:
+          maxSize: 5M
+          # http://www.iana.org/assignments/media-types/media-types.xhtml
+          mimeTypes: jpg;jpeg;gif;png;doc;docx;rtf;xls;xlsx;pdf
+

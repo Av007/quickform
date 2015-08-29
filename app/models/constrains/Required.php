@@ -17,13 +17,14 @@ class Required
     protected $jsValidation = false;
 
     /**
-     * @param Validation $validation
-     * @param bool       $jsValidation
+     * @param Validation        $validation
+     * @param bool              $jsValidation
+     * @param \Silex\Translator $translator
      */
-    public function __construct($validation, $jsValidation = false)
+    public function __construct($validation, $jsValidation = false, $translator)
     {
         $this->validation = $validation;
-        $this->constrain = new Assert\NotBlank(array('message' => $this->validation->getMessage()));
+        $this->constrain = new Assert\NotBlank(array('message' => $translator->trans($this->validation->getMessage())));
         $this->jsValidation = $jsValidation;
 
         if ($jsValidation) {

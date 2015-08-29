@@ -10,10 +10,10 @@ $app->match('/', function(Request $request) use ($app) {
     // read config file
     $yml = new Parser();
     /** @var array|null $config */
-    $config = $yml->parse(file_get_contents(MAIN_PATH . '/config.yml'));
+    $config = $yml->parse(file_get_contents(MAIN_PATH . '/form.yml'));
 
     // build form
-    $formBuilder = new FormBuilder($app['form.factory'], $config);
+    $formBuilder = new FormBuilder($app['form.factory'], $config, $app['translator']);
     $form = $formBuilder->getForm();
 
     $form->handleRequest($request);
@@ -24,7 +24,7 @@ $app->match('/', function(Request $request) use ($app) {
         echo '<pre>'; var_dump($data); die;
 
         // redirect somewhere
-        return $app->redirect('...');
+        return $app->redirect('/');
     }
 
     return $app['twig']->render('form.html.twig', array(
@@ -33,6 +33,11 @@ $app->match('/', function(Request $request) use ($app) {
     ));
 })->bind('form');
 
-/*$app->post('/admin/login_check', function(Request $request) use ($app) {
-    // will handle event dispatcher
-})->bind('check_path');*/
+// change locale
+$app->get('/locale', function(Request $request) use ($app) {
+    // setup language
+    $lang = $request->get('lang', 'en');
+    $app['locale_fallback'] = $lang == 'en' ? 'ru' : $lang;
+
+    return $app->redirect('/');
+})->bind('change_lang');

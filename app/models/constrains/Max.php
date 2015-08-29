@@ -17,15 +17,16 @@ class Max
     protected $jsValidation = false;
 
     /**
-     * @param Validation $validation
-     * @param bool       $jsValidation
+     * @param Validation        $validation
+     * @param bool              $jsValidation
+     * @param \Silex\Translator $translator
      */
-    public function __construct($validation, $jsValidation = false)
+    public function __construct($validation, $jsValidation = false, $translator)
     {
         $errorOptions = array('max' => $validation->getValue());
 
         if ($validation->getMessage()) {
-            $errorOptions = array_merge($errorOptions, array('maxMessage' => $validation->getMessage()));
+            $errorOptions = array_merge($errorOptions, array('maxMessage' => $translator->trans($validation->getMessage())));
         }
 
         if ($jsValidation) {

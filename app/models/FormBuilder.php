@@ -22,15 +22,20 @@ class FormBuilder
     /** @var bool $validationType */
     protected $validationType = false;
 
+    /** @var \Silex\Translator $translator */
+    protected $translator;
+
     /**
      * Initialization
      *
      * @param FormFactory $formFactory
      * @param array|null $structure
+     * @param mixed $translator
      */
-    public function __construct(FormFactory $formFactory, $structure)
+    public function __construct(FormFactory $formFactory, $structure, $translator)
     {
         $this->validationType = $structure['form']['validation'];
+        $this->translator = $translator;
 
         $formOptions = array();
         if ('js' === $this->validationType) {
@@ -119,17 +124,17 @@ class FormBuilder
     protected function setValidation(Validation $validationClass)
     {
         if ('required' === $validationClass->getKey()) {
-            return new Constrains\Required($validationClass, 'js' === $this->validationType);
+            return new Constrains\Required($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ($validationClass->getValue() && ('min' === $validationClass->getKey())) {
-            return new Constrains\Min($validationClass, 'js' === $this->validationType);
+            return new Constrains\Min($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ($validationClass->getValue() && ('max' == $validationClass->getKey())) {
-            return new Constrains\Max($validationClass, 'js' === $this->validationType);
+            return new Constrains\Max($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ('email' == $validationClass->getKey()) {
-            return new Constrains\Email($validationClass, 'js' === $this->validationType);
+            return new Constrains\Email($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ($validationClass->getValue() && ('regexp' == $validationClass->getKey())) {
-            return new Constrains\Regexp($validationClass, 'js' === $this->validationType);
+            return new Constrains\Regexp($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ($validationClass->getValue() && ('phone' == $validationClass->getKey())) {
-            return new Constrains\Phone($validationClass, 'js' === $this->validationType);
+            return new Constrains\Phone($validationClass, 'js' === $this->validationType, $this->translator);
         } elseif ('file' == $validationClass->getKey()) {
             return new Constrains\Collection($validationClass);
         }
