@@ -3,7 +3,7 @@ locale: ru
 mail:
     host: smtp.gmail.com
     port: 465
-    username: grandglory7@gmail.com
-    password: moldcell
+    username: EMAIL
+    password: PASS
     encryption: ssl
     auth_mode: login

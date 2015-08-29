@@ -3,6 +3,7 @@
 vendor
 
 app/logs
+app/config.yml
 
 web/bower_components
 web/npm-debug.log
