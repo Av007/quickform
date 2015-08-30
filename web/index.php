@@ -25,13 +25,23 @@ if ($app['debug']) {
 
 $app->register(new ValidatorServiceProvider());
 $app->register(new FormServiceProvider());
-$app->register(new SwiftmailerServiceProvider(), $config['mail']);
+$app->register(new SwiftmailerServiceProvider(), array_replace($config['mail'], array(
+    'disable_delivery' => $config['debug']
+)));
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new SessionServiceProvider());
 $app->register(new Silex\Provider\TranslationServiceProvider(), array(
     'locale_fallback'    => $config['locale'],
     'locale'             => $config['locale'],
     'translator.domains' => array(),
+));
+
+// enable database
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver'   => 'pdo_sqlite',
+        'path'     => MAIN_PATH.'/app.db',
+    ),
 ));
 
 // enable localization
@@ -47,20 +57,27 @@ $app->register(new Silex\Provider\MonologServiceProvider(), array(
 ));
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path'    => array(MAIN_PATH . '/views'),
-    //'twig.options' => array('cache' => MAIN_PATH . '/cache/twig'),
+    'twig.options' => array('cache' => MAIN_PATH . '/cache/twig'),
 ));
 $app->before(function () use ($app) {
     $app['translator']->addLoader('xlf', new XliffFileLoader());
     $app['translator']->addResource('xlf', __DIR__ . '/../vendor/symfony/validator/Resources/translations/validators.ru.xlf', 'ru', 'validators');
 });
 
+/** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+$session = $app['session'];
+$session->start();
+
+if ($lang = $session->get('locale', $config['locale'])) {
 // apply localization
-$app->before(function () use ($app, $config) {
-    $config['app']['lang'] = $config['locale'];
-    $app['lang'] = $config['locale'];
-    $app['locale'] = $config['locale'];
-    return $app;
-});
+    /*$app->before(function () use ($app, $lang) {
+        $app['locale'] = $lang;
+
+        return $app;
+    });*/
+    $app['locale'] = $lang;
+    $app['locale_fallback'] = $lang;
+}
 
 
 require_once MAIN_PATH . '/controllers/error.php';

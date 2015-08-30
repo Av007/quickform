@@ -3,6 +3,7 @@
 namespace Quickform\Models;
 
 use Quickform\Models\Constrains;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormFactory;
 use \Symfony\Component\Form\FormBuilder as FormSymfonyBuilder;
 use Symfony\Component\HttpFoundation\File\File;
@@ -111,6 +112,18 @@ class FormBuilder
                 'attr' => array('class' => 'button right')
             ));
         }
+
+        $formBuilder->get('phone')->addModelTransformer(new CallbackTransformer(
+            function ($original) {
+                return $original;
+            },
+            function ($submitted) {
+                $submitted = str_replace(array('(', ')', '+', '-', ' '), '', $submitted);
+
+                return intval($submitted);
+            }
+        ))
+        ;
 
         $this->form = $formBuilder;
     }
