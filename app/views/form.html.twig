@@ -122,6 +122,9 @@
 {% block content %}
     <div class="row">
         <h1>{{ title|trans }}</h1>
+        {% if sizeError is defined and sizeError %}
+            <p class="text-center error">{{ "Total upload shoud have less then 20Mb"|trans }}</p>
+        {% endif %}
         <a href="{{ path('change_lang') }}" class="button tiny right">{{ "Language"|trans }}</a>
 
         <div class="small-10">

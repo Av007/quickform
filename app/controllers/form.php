@@ -23,6 +23,31 @@ $app->match('/', function(Request $request) use ($app) {
         unset($data['attachment']);
         $date = new \DateTime();
 
+        $f = array();
+
+        foreach ($files as $file) {
+            if (isset($file['file']) && is_array($file['file'])) {
+                foreach ($file['file'] as $singleFile) {
+                    $f[] = $singleFile;
+                }
+            } else {
+                $f[] = $file;
+            }
+        }
+        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+        $size = 0;
+        foreach (array_filter($f) as $file) {
+            $size += $file->getSize();
+        }
+
+        if (20000 < $size) {
+            return $app['twig']->render('form.html.twig', array(
+                'title'     => $config['form']['title'],
+                'form'      => $form->createView(),
+                'sizeError' => true
+            ));
+        }
+
         /** @var \Doctrine\DBAL\Connection $connection */
         $connection = $app['db'];
         $isSaved = $connection->insert('form_data', array(

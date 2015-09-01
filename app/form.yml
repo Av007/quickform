@@ -53,6 +53,5 @@ form:
       validation:
         file:
           maxSize: 5M
-          # http://www.iana.org/assignments/media-types/media-types.xhtml
           mimeTypes: jpg;jpeg;gif;png;doc;docx;rtf;xls;xlsx;pdf
 

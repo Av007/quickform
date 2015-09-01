@@ -77,7 +77,7 @@ class FormBuilder
 
                         foreach ($field['validation'] as $key => $validation) {
                             $data = $this->setValidation(new Validation($key, $field['name'], $validation));
-                            $options = array_merge_recursive($options, $data->getOptions());;
+                            $options = array_merge_recursive($options, $data->getOptions());
                             $constrains = array_merge($constrains, array($data->getConstrains()));
                             $attributes[] = $data->getJsValidation();
                         }
@@ -113,17 +113,18 @@ class FormBuilder
             ));
         }
 
-        $formBuilder->get('phone')->addModelTransformer(new CallbackTransformer(
-            function ($original) {
-                return $original;
-            },
-            function ($submitted) {
-                $submitted = str_replace(array('(', ')', '+', '-', ' '), '', $submitted);
+        if ($formBuilder->has('phone')) {
+            $formBuilder->get('phone')->addModelTransformer(new CallbackTransformer(
+                function ($original) {
+                    return $original;
+                },
+                function ($submitted) {
+                    $submitted = str_replace(array('(', ')', '+', '-', ' '), '', $submitted);
 
-                return intval($submitted);
-            }
-        ))
-        ;
+                    return intval($submitted);
+                }
+            ));
+        }
 
         $this->form = $formBuilder;
     }

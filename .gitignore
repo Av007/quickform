@@ -3,6 +3,7 @@
 vendor
 
 app/logs
+app/cache/*
 app/config.yml
 app/app.db
 
