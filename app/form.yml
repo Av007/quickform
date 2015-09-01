@@ -1,4 +1,6 @@
-emails: avdeevvladimir@gmail.com
+# yaml docs
+# http://www.yaml.org/spec/1.2/spec.html
+emails: avdeevvladimir@gmail.com # or array
 form:
   title: Title
   show: true
